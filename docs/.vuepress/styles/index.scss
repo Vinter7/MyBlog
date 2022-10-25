@@ -1,0 +1,23 @@
+html.dark {
+  // 主题色
+  // --c-brand: #cd3f45;
+  // --c-brand-light: #DF5D64;
+
+  // 背景色
+  --c-bg: #1A1A1A;
+  --c-bg-light: #242424;
+  --c-bg-lighter: #2F2F2F;
+  --code-bg-color: #242424;
+  // 文字色
+  --c-text: #E1E1E1;
+  --c-text-light: #E3E3E3;
+  --c-text-lighter: #979797;
+  --c-text-lightest: #979797;
+  // 边框色
+  --c-border: #363636;
+  --code-hl-bg-color: #363636;
+  code {
+    color: #aac8e4;
+  }
+}
+

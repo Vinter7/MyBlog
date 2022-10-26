@@ -8,7 +8,7 @@ export default {
   title: '高枕枕のBlog',
   description: '高枕枕的知识库兼博客站',
   dest: './dist',
-  head: [['link', { rel: 'icon', href: '/images/风车.png' }]],
+  head: [['link', { rel: 'icon', href: '/images/windmill.png' }]],
   theme,
   plugins: [
     searchPlugin({}),

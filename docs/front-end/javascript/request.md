@@ -42,6 +42,8 @@
 
 ## Fetch
 
+**fetch(url,[options])**
+
 - `let promise = fetch(url,[options])` 
 - 典型的 `fetch` 请求由两个 `await` 调用组成
   - `let response = await fetch(url, options)`
@@ -54,6 +56,28 @@
   - `headers: {},`
   - `body` response body 类型 
     - string(json) FormData Blob/BufferSource
+
+
+
+**FormDate**
+
+- `let formData = new FormDate(theIdOfForm)`
+- fetch可以接受一个 FormData 对象作为body
+- 方法
+  - `.append(name, value)` 添加表单字段
+  - `.set(name, value)` 重设表单字段
+  - `.append/set(name, blob, fileName)` 添加/重设
+  - `.delete(name)` 移除字段
+  - `.get(name)` 获取字段值
+  - `.has(name)` 有无
+- 发送带文件的表单
+  - `<input type="file" name="picture" accept="image/*">`
+  - `body: new FormData(formElem)`
+- 发送blob数据表单
+  - `<canvas id="canvasElem" width="100" height="80" style="border:1px solid"></canvas>`
+  - `let imageBlob = await new Promise(resolve => canvasElem.toBlob(resolve, 'image/png'))`
+  - `formData.append("image", imageBlob, "image.png")`
+
 
 ## Axios
 

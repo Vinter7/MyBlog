@@ -6,10 +6,13 @@
 
 **原生方法**
 
+现已被fetch替代
+
 - `const xhr = new XMLHttpRequest()` 构造
-- `xhr.open('POST','url')` 初始化
+- `xhr.open('POST','url', [async=true])` 初始化(默认异步)
 - `xhr.send('a=100&b=50')` 发送
 - `xhr.setRequestHeader('key','value')` 设置请求头信息
+- `xhr.onload = function() {}`
 - `xhr.onreadystatechange=()=>{}` 阶段改变时
 - `xhr.readystate` 阶段
 - `xhr.status` 状态码
@@ -19,6 +22,35 @@
 - `xhr.ontimeout=()=>{}` 超时回调
 - `xhr.onerror=()=>{}` 异常回调
 - `xhr.abort()` 取消请求
+
+**上传进度**
+
+```html
+<input type="file" onchange="upload(this.files[0])">
+
+<script>
+function upload(file) {
+  let xhr = new XMLHttpRequest();
+
+  // 跟踪上传进度
+  xhr.upload.onprogress = function(event) {
+    console.log(`Uploaded ${event.loaded} of ${event.total}`);
+  };
+
+  // 跟踪完成：无论成功与否
+  xhr.onloadend = function() {
+    if (xhr.status == 200) {
+      console.log("success");
+    } else {
+      console.log("error " + this.status);
+    }
+  };
+
+  xhr.open("POST", "/article/xmlhttprequest/post/upload");
+  xhr.send(file);
+}
+</script>
+```
 
 <br>
 
@@ -160,6 +192,20 @@ let results = await Promise.all(fetchJobs);
 
 **跨源请求**
 
+- 同源策略: 协议 域名 端口号皆相同
+- JSONP
+  - 只支持get
+  - 服务端应返回js语句的字符串
+  - 在前端定义函数，服务端返回带参数的函数触发
+  - jQuery实现接收JSON
+    - `$. getJSON('url/route?callback=?',function(){})`
+    - `let str = JSON.stringify(json)`
+    - `let cb = request.query.callback`
+    - `response.end('${cb}(${str})')`
+- CORS
+  - 仅设置服务端接口
+  - 设置相应头允许指定站点响应放行
+  - `response.setHeader("Access-Control-Allow-Origin","*")`
 - 安全请求
   - 安全方法 get post head
   - 安全的header
@@ -188,6 +234,23 @@ let results = await Promise.all(fetchJobs);
   - 然后发送实际的请求
 
 
+**Fetch API**
+
+- `method` 'GET' 
+- `headers` {"Content-Type": "text/plain;charset=UTF-8"}
+- `body` undefined string，FormData，Blob，BufferSource URLSearchParams
+- `referrer` "about:client" "" 发出请求的页面的 url
+- `referrerPolicy` "no-referrer-when-downgrade" no-referrer，origin，same-origin...
+- `mode` "cors" same-origin，no-cors 跨源
+- `credentials` "same-origin" omit，include 发cookie
+- `cache` "default" no-store，reload，no-cache，force-cache only-if-cached 缓存
+- `redirect` "follow" manual，error 重定向
+- `integrity` "" hash值 校验
+- `keepalive` false true 请求在网页关闭后继续存在
+- `signal` undefined AbortController
+- `window` window null
+
+
 ## Axios
 
 - `axios.get(url,{配置})`
@@ -200,19 +263,37 @@ let results = await Promise.all(fetchJobs);
   - method url params headers data
 - `.then(res=>{})`
 
-## 跨域问题
+## 即时通信
 
-- 同源策略: 协议 域名 端口号皆相同
-- JSONP
-  - 只支持get
-  - 服务端应返回js语句的字符串
-  - 在前端定义函数，服务端返回带参数的函数触发
-  - jQuery实现接收JSON
-    - `$. getJSON('url/route?callback=?',function(){})`
-    - `let str = JSON.stringify(json)`
-    - `let cb = request.query.callback`
-    - `response.end('${cb}(${str})')`
-- CORS
-  - 仅设置服务端接口
-  - 设置相应头允许指定站点响应放行
-  - `response.setHeader("Access-Control-Allow-Origin","*")`
+
+### 长轮询
+
+**用于消息很少,但发了之后我得知道的情况**
+
+:::: code-group
+::: code-group-item client.vue
+```vue
+
+```
+:::
+::: code-group-item server.js
+```js
+
+
+```
+:::
+::::
+
+
+### WebSocket
+
+
+**用于需要持久连续数据双向交换服务的情况**
+
+
+
+### Server Sent Events
+
+
+
+**用于保持单向接收服务器消息的情况**

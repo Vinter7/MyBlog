@@ -79,6 +79,115 @@
   - `formData.append("image", imageBlob, "image.png")`
 
 
+**Fetch下载进度**
+
+仅用于下载过程 (上传可以在客户端拆解分片上传)
+`response.body` 属性
+
+```js
+// 代替 response.json() 以及其他方法
+const reader = response.body.getReader();
+// 在 body 下载时，一直为无限循环
+while(true) {
+  // 当最后一块下载完成时，done 值为 true
+  // value 是块字节的 Uint8Array
+  const {done, value} = await reader.read();
+  if (done) {
+    break;
+  }
+  console.log(`Received ${value.length} bytes`)
+}
+```
+<br>
+
+**接收响应块**
+
+```js
+// Step 1：启动 fetch，并获得一个 reader
+let response = await fetch('url');
+const reader = response.body.getReader();
+// Step 2：获得总长度（length）
+const contentLength = +response.headers.get('Content-Length');
+// Step 3：读取数据
+let receivedLength = 0; // 当前接收到了这么多字节
+let chunks = []; // 接收到的二进制块的数组（包括 body）
+while(true) {
+  const {done, value} = await reader.read();
+  if (done) {
+    break;
+  }
+  chunks.push(value);
+  receivedLength += value.length;
+  console.log(`Received ${receivedLength} of ${contentLength}`)
+}
+// Step 4：将块连接到单个 Uint8Array
+let chunksAll = new Uint8Array(receivedLength); // (4.1)
+let position = 0;
+for(let chunk of chunks) {
+  chunksAll.set(chunk, position); // (4.2)
+  position += chunk.length;
+}
+// Step 5：解码成字符串
+let result = new TextDecoder("utf-8").decode(chunksAll);
+let commits = JSON.parse(result);
+alert(commits[0].author.login);
+// //二进制内容
+// let blob = new Blob(chunks);
+```
+
+**中止Abort**
+
+- `let controller = new AbortController()`
+  - `.abort()` 中止方法
+  - `.signal`  aborted
+- `fetch(url,{signal:controller.signal})`
+- `controller.abort()`
+- promise 就会以一个 error AbortError reject
+
+
+```js
+let urls = [...]; // 要并行 fetch 的 url 列表
+let controller = new AbortController();
+// 一个 fetch promise 的数组
+let fetchJobs = urls.map(url => fetch(url, {
+  signal: controller.signal
+}))
+let results = await Promise.all(fetchJobs);
+// controller.abort() 被从任何地方调用，
+// 它都将中止所有 fetch
+```
+
+
+**跨源请求**
+
+- 安全请求
+  - 安全方法 get post head
+  - 安全的header
+    - Accept Aceept-Language Content-Language
+    - Content-Type
+      - application/x-www-form-urlencoded
+      - multipart/form-data
+      - text/plain
+- CORS
+  - Origin (发)
+  - Access-Control-Allow-Origin (收)
+- 请求头的讲究
+  - 对于跨源请求 js只能访问安全的请求头
+  - 访问其他需要`Access-Control-Expose-Headers`
+  - 比如`Content-Length`
+- 非安全请求
+  - 先发预检请求 `options`
+    - 无body
+    - Access-Control-Request-Method 请求方法
+    - Access-Control-Request-Headers 请求头列表
+  - 如果同意
+    - Access-Control-Allow-Origin 允许请求的源
+    - Access-Control-Allow-Methods 允许的方法
+    - Access-Control-Allow-Headers 允许的请求头
+    - Access-Control-Max-Age 此权限的秒数
+  - 然后发送实际的请求
+
+
 ## Axios
 
 - `axios.get(url,{配置})`

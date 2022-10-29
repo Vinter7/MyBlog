@@ -273,13 +273,67 @@ let results = await Promise.all(fetchJobs);
 :::: code-group
 ::: code-group-item client.vue
 ```vue
+<script setup>
+import { ref } from 'vue'
 
+async function subscribe() {
+  let response = await fetch(
+    `http://localhost:8080/subscribe?random=${Math.random()}`
+  )
+  let mes = await response.text()
+  console.log(mes)
+  records.value.push(mes)
+  await subscribe()
+}
+
+function publish(form) {
+  let msg = form.inp.value
+  form.inp.value = ''
+  fetch(`http://localhost:8080/publish`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `msg=${msg}`,
+  })
+}
+
+let records = ref(['将在此展示发送记录：'])
+subscribe()
+</script>
+
+<template>
+  <div>输入消息 点击发送后能在下方显示出来</div>
+  <br />
+  <form @submit.prevent="publish($event.target)">
+    <input name="inp" type="text" placeholder="输入消息" />
+    <input type="submit" />
+  </form>
+  <div v-for="i in records">{{ i }}</div>
+</template>
 ```
 :::
 ::: code-group-item server.js
 ```js
+const express = require('express')
+const cors = require('cors')
+const app = express()
+app.use(express.urlencoded())
+app.use(cors())
 
-
+let subscribers = []
+app.get('/subscribe', (req, res) => subscribers.push(res))
+app.post('/publish', (req, res) => {
+  let msg = req.body.msg
+  for (let i of subscribers) {
+    i.end(msg)
+  }
+  subscribers = []
+  res.end(msg)
+})
+app.listen(8080, () => {
+  console.log('服务器启动8080')
+})
 ```
 :::
 ::::

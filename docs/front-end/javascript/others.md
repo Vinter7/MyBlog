@@ -131,3 +131,107 @@ let range = {
 | 默认导出 | `export default anydata` | `import name from './m.js' ` |
 | `default`<br>名称 | `export {f as default}` | `import {default as name} from './m.js' ` |
 | 动态导入 | 同上 | `let {default:name,others} = await import('./m.js')` |
+
+## 即时通信
+
+
+### 长轮询
+
+**用于消息很少,但发了之后我得知道的情况**
+
+:::: code-group
+::: code-group-item client.vue
+```vue
+<script setup>
+import { ref } from 'vue'
+
+async function subscribe() {
+  let response = await fetch(
+    `http://localhost:8080/subscribe?random=${Math.random()}`
+  )
+  let mes = await response.text()
+  console.log(mes)
+  records.value.push(mes)
+  await subscribe()
+}
+
+function publish(form) {
+  let msg = form.inp.value
+  form.inp.value = ''
+  fetch(`http://localhost:8080/publish`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `msg=${msg}`,
+  })
+}
+
+let records = ref(['将在此展示发送记录：'])
+subscribe()
+</script>
+
+<template>
+  <div>输入消息 点击发送后能在下方显示出来</div>
+  <br />
+  <form @submit.prevent="publish($event.target)">
+    <input name="inp" type="text" placeholder="输入消息" />
+    <input type="submit" />
+  </form>
+  <div v-for="i in records">{{ i }}</div>
+</template>
+```
+:::
+::: code-group-item server.js
+```js
+const express = require('express')
+const cors = require('cors')
+const app = express()
+app.use(express.urlencoded())
+app.use(cors())
+
+let subscribers = []
+app.get('/subscribe', (req, res) => subscribers.push(res))
+app.post('/publish', (req, res) => {
+  let msg = req.body.msg
+  for (let i of subscribers) {
+    i.end(msg)
+  }
+  subscribers = []
+  res.end(msg)
+})
+app.listen(8080, () => {
+  console.log('服务器启动8080')
+})
+```
+:::
+::::
+
+
+### WebSocket
+
+
+**用于需要持久连续数据双向交换服务的情况**
+
+- `let socket = new WebSocket("ws://...")`
+- 事件
+  - `.onopen = function(){}` 连接建立
+  - `.onmessage = function(){}` 收到数据
+  - `.onerror = function(){}` 出错
+  - `.onclose = function(){}` 连接关闭
+- 方法
+  - `.send(data)` 发送
+  - `.close([code], [reason])` 关闭 关闭码和原因
+- 属性
+  - `.readyState` 0未 1通 2关 3已
+
+```js
+//聊天示例
+```
+
+
+### Server Sent Events
+
+
+
+**用于保持单向接收服务器消息的情况**

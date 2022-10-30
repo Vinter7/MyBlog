@@ -137,7 +137,7 @@ let range = {
 
 ### 长轮询
 
-**用于消息很少,但发了之后我得知道的情况**
+**用于消息很少,但发了之后要及时知道的情况**
 
 :::: code-group
 ::: code-group-item client.vue
@@ -214,6 +214,7 @@ app.listen(8080, () => {
 **用于需要持久连续数据双向交换服务的情况**
 
 - `let socket = new WebSocket("ws://...")`
+- 非http协议 因此不受跨源限制
 - 事件
   - `.onopen = function(){}` 连接建立
   - `.onmessage = function(){}` 收到数据
@@ -225,13 +226,145 @@ app.listen(8080, () => {
 - 属性
   - `.readyState` 0未 1通 2关 3已
 
-```js
-//聊天示例
+
+:::: code-group
+::: code-group-item client.vue
+```vue
+<script setup>
+import { ref } from 'vue'
+
+function publish(form) {
+  let msg = form.inp.value
+  form.inp.value = ''
+  socket.send(msg)
+}
+
+let records = ref(['将在此展示收到消息：'])
+let socket = new WebSocket('ws://localhost:8080')
+socket.onmessage = (event) => records.value.push(event.data)
+</script>
+
+<template>
+  <div>输入消息 点击发送后能在下方显示出来</div>
+  <br />
+  <form @submit.prevent="publish($event.target)">
+    <input name="inp" type="text" placeholder="输入消息" />
+    <input type="submit" />
+  </form>
+  <div v-for="i in records">{{ i }}</div>
+</template>
 ```
+:::
+::: code-group-item server.js
+```js
+import { WebSocketServer } from 'ws'
+
+const wss = new WebSocketServer({ port: 8080 })
+console.log('websocket服务启动于8080')
+const clients = new Set()
+wss.on('connection', (ws) => {
+  console.log('新设备已连接')
+  clients.add(ws)
+  ws.on('message', (msg) => {
+    console.log('服务端收到: %s', msg)
+    for (let client of clients) {
+      // msg为blob对象，因此进行类型转换
+      client.send(msg + '')
+    }
+  })
+  ws.send('服务端连接成功')
+})
+```
+:::
+::::
 
 
 ### Server Sent Events
 
+**用于保持单向接收服务器消息(文本)的情况**
+
+- `let source = new EventSource(url, [credentials])`
+- 属性
+  - `readyState` 当前连接状态
+  - `lastEventId` 最后接收到的 id
+- 方法 `close()` 关闭连接
+- 事件
+  - `open` 建立连接
+  - `message` 收到消息
+  - `error` 出错
+- 服务器响应格式
+  - 由 \n\n 分隔
+  - data 消息体
+  - id 更新 lastEventId 在data后
+  - retry 延迟ms
+  - event 自定义事件名 在data前
 
 
-**用于保持单向接收服务器消息的情况**
+:::: code-group
+::: code-group-item client.vue
+```vue
+<script setup>
+import { ref } from 'vue'
+
+function start() {
+  st.value = !st.value
+  s = new EventSource('http://localhost:8080/')
+  s.onopen = () => arr.value.push('建立连接')
+  s.onmessage = e => arr.value.push('收到消息:' + e.data)
+  s.addEventListener('bye', e => arr.value.push(`bye事件:` + e.data))
+  s.onerror = () => arr.value.push('连接出错')
+}
+
+function stop() {
+  st.value = !st.value
+  s.close()
+  arr.value.push('连接关闭')
+}
+
+let arr = ref(['收到消息:'])
+let s
+let st = ref(true)
+</script>
+
+<template>
+  <button @click="st ? start() : stop()">
+    {{ st ? '接收' : '关闭' }}
+  </button>
+  <div v-for="i in arr">{{ i }}</div>
+</template>
+```
+:::
+::: code-group-item server.js
+```js
+import express from 'express'
+import cors from 'cors'
+
+const app = express()
+app.use(express.urlencoded())
+app.use(cors())
+
+app.get('/', (req, res) => {
+  res.header('Content-Type', 'text/event-stream; charset=utf-8')
+  res.header('Cache-Control', 'no-cache')
+  function w() {
+    i++
+    if (i == 4) {
+      res.write('event: bye\ndata: bye-bye\n\n')
+      clearInterval(timer)
+      res.end()
+      return
+    }
+    res.write('data: ' + i + '\n\n')
+  }
+  console.log('收到连接')
+  let i = 0
+  let timer = setInterval(w, 1000)
+  w()
+})
+
+app.listen(8080, () => {
+  console.log('服务器启动8080')
+})
+```
+:::
+::::

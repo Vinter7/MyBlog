@@ -44,6 +44,16 @@ function showAround(i) {
   }
 }
 
+function allSwept() {
+  let arr_c = arr.value
+  let status_c = status.value
+  for (let i = 0; i < arr_c.length; i++) {
+    if (!arr_c[i] && status_c[i] != 1) return false
+  }
+  console.log('雷扫完了')
+  return true
+}
+
 //点击事件
 function ck(i) {
   if (arr.value[i] === 1) {
@@ -52,7 +62,7 @@ function ck(i) {
     return (end.value = true)
   }
   status.value[i] = 1
-  if (!status.value.includes(0)) {
+  if (allSwept()) {
     alert('所有雷均已排除,恭喜你获得胜利')
     return (end.value = true)
   }
@@ -87,9 +97,9 @@ let ok = computed(() => {
 })
 
 let config = reactive([15, 15, 20]) // 响应式
-let h = ref(15)
-let w = ref(15)
-let m = ref(20)
+let h = ref(15) //行数
+let w = ref(15) //列数
+let m = ref(20) //雷数
 //是否被点击的状态 0未点击 1左击 2右击
 let status = ref([])
 let end = ref() //是否游戏结束

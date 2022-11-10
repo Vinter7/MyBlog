@@ -13,6 +13,7 @@ export default defaultTheme({
         '/front-end/javascript/',
         '/front-end/vue/',
         '/front-end/node/',
+        '/front-end/ml5/',
       ],
     },
     {
@@ -99,6 +100,15 @@ export default defaultTheme({
           '/front-end/node/modules',
           '/front-end/node/express',
           '/front-end/node/koa',
+        ],
+      },
+      {
+        text: 'ml5.js',
+        collapsible: true,
+        children: [
+          '/front-end/ml5/p5',
+          '/front-end/ml5/machine',
+          '/front-end/ml5/deep',
         ],
       },
     ],

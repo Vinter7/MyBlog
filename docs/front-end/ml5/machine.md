@@ -198,3 +198,71 @@ function draw() {
 ```
 
 
+## Neural Network
+
+**Collect data to train your neural network or use existing data to train your neural network to classification or regression**
+
+```js
+let model
+let target = 'C'
+let state = 'collection'
+
+function setup() {
+  createCanvas(400, 400)
+  let options = {
+    inputs: ['x', 'y'],
+    outputs: ['label'],
+    task: 'classification',
+    debug: true,
+  }
+  model = ml5.neuralNetwork(options)
+  background(233)
+}
+
+function keyPressed() {
+  if (key == 't') {
+    model.normalizeData() // 化0-1
+    model.train({ epochs: 200 }, () => {
+      console.log('finished training')
+      state = 'prediction'
+    })
+  } else {
+    target = key.toUpperCase()
+  }
+}
+
+function mousePressed() {
+  let inputs = {
+    x: mouseX,
+    y: mouseY,
+  }
+
+  if (state == 'collection') {
+    let outputs = {
+      label: target,
+    }
+    model.addData(inputs, outputs)
+    stroke(0)
+    noFill()
+    ellipse(mouseX, mouseY, 25)
+    fill(0)
+    noStroke()
+    textAlign(CENTER, CENTER)
+    text(target, mouseX, mouseY)
+  } else if (state == 'prediction') {
+    model.classify(inputs, (err, res) => {
+      console.log(err ?? res[0].label)
+      stroke(0)
+      fill('skyblue')
+      ellipse(mouseX, mouseY, 25)
+      fill(0)
+      noStroke()
+      textAlign(CENTER, CENTER)
+      text(res[0].label, mouseX, mouseY)
+    })
+  }
+}
+```
+
+
+

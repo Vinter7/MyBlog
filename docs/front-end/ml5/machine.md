@@ -4,6 +4,13 @@
 
 ----
 
+Script Src:
+
+1. `https://unpkg.com/ml5@latest/dist/ml5.min.js`
+2. `https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js`
+
+
+
 ## ImageClassifier
 
 **use Mobilnet to recognize the content of images**
@@ -202,6 +209,14 @@ function draw() {
 
 **Collect data to train your neural network or use existing data to train your neural network to classification or regression**
 
+1. `let nn = ml5.neuralNetwork(options)`
+2. `nn.addData(inputs, outputs)`
+3. `nn.normalizeData()`
+4. `nn.train()`
+5. `.predict()`回归 `.classify()`分类
+6. `.saveData()` `.loadData()`
+7. `.save()` `load()` *the model*
+
 ```js
 let model
 let target = 'C'
@@ -264,5 +279,49 @@ function mousePressed() {
 }
 ```
 
+## Pose Net
 
+**PoseNet is a machine learning model that allows for Real-time Human Pose Estimation**
 
+```js
+let video
+let poseNet
+let pose
+let skeleton
+
+function setup() {
+  createCanvas(640, 500)
+  video = createCapture(VIDEO)
+  video.hide()
+  poseNet = ml5.poseNet(video, console.log('model is ready'))
+  poseNet.on('pose', res => {
+    // console.log(res)
+    pose = res[0]?.pose
+    skeleton = res[0]?.skeleton
+  })
+}
+
+function draw() {
+  background(0)
+  // 水平翻转
+  // translate(video.width, 0) 
+  // scale(-1, 1)
+  image(video, 0, 0)
+  if (pose) {
+    fill('red')
+    for (let i of pose.keypoints) {
+      ellipse(i.position.x, i.position.y, 20)
+    }
+  }
+  if (skeleton) {
+    console.log(skeleton)
+    for (const i of skeleton) {
+      let a = i[0].position
+      let b = i[1].position
+      strokeWeight(2)
+      stroke(255)
+      line(a.x, a.y, b.x, b.y)
+    }
+  }
+}
+```

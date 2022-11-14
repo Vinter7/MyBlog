@@ -1,4 +1,4 @@
-# 风物之诗
+# 风花诗琴
 
 [音源](https://github.com/haveyouwantto/WindsongLyre-Sim)
 

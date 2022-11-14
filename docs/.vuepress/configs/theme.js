@@ -37,7 +37,7 @@ export default defaultTheme({
     },
     {
       text: 'Demo',
-      children: ['/demo/2048', '/demo/mine', '/demo/windsonglyre'],
+      children: ['/demo/2048', '/demo/mine', '/demo/windsong'],
     },
   ],
   logo: '/images/windmill.png',
@@ -52,12 +52,8 @@ export default defaultTheme({
       '/diary/2208.md',
       '/diary/2209.md',
     ],
-    '/others/': [
-      '/others/git.md',
-      '/others/regexp.md',
-      '/others/vim.md',
-    ],
-    '/demo/': ['/demo/2048', '/demo/mine', '/demo/windsonglyre'],
+    '/others/': ['/others/git.md', '/others/regexp.md', '/others/vim.md'],
+    '/demo/': ['/demo/2048', '/demo/mine', '/demo/windsong'],
     '/front-end/': [
       {
         text: 'HTML & CSS',

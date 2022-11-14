@@ -1,7 +1,0 @@
-# sheep of sheep
-
-----
-
-
-
-pass

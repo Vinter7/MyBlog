@@ -37,7 +37,7 @@ export default defaultTheme({
     },
     {
       text: 'Demo',
-      children: ['/demo/2048', '/demo/mine', '/demo/sheep'],
+      children: ['/demo/2048', '/demo/mine', '/demo/windsonglyre'],
     },
   ],
   logo: '/images/windmill.png',
@@ -57,7 +57,7 @@ export default defaultTheme({
       '/others/regexp.md',
       '/others/vim.md',
     ],
-    '/demo/': ['/demo/2048', '/demo/mine', '/demo/sheep'],
+    '/demo/': ['/demo/2048', '/demo/mine', '/demo/windsonglyre'],
     '/front-end/': [
       {
         text: 'HTML & CSS',

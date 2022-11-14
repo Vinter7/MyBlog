@@ -11,7 +11,14 @@ export default {
   head: [['link', { rel: 'icon', href: '/images/windmill.png' }]],
   theme,
   plugins: [
-    searchPlugin({}),
+    searchPlugin({
+      locales: {
+        '/': {
+          placeholder: 'Search...',
+        },
+      },
+      hotKeys: ['`', '/'],
+    }),
     registerComponentsPlugin({
       componentsDir: path.resolve(__dirname, './components'),
     }),

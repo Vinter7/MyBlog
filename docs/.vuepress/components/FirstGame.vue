@@ -40,15 +40,15 @@ function play(i) {
   let cp = arr.value
   let a
   let b
-  if (i == 1) a = t(t(cp).map((it) => run(it)))
+  if (i == 1) a = t(t(cp).map(it => run(it)))
   if (i == 2) {
-    b = t(cp).map((it) => it.reverse())
-    a = t(b.map((it) => run(it).reverse()))
+    b = t(cp).map(it => it.reverse())
+    a = t(b.map(it => run(it).reverse()))
   }
-  if (i == 3) a = cp.map((it) => run(it))
+  if (i == 3) a = cp.map(it => run(it))
   if (i == 4) {
-    b = cp.map((it) => run(it.reverse()))
-    a = b.map((it) => it.reverse())
+    b = cp.map(it => run(it.reverse()))
+    a = b.map(it => it.reverse())
   }
   for (let x = 0; x < 4; x++) {
     for (let y = 0; y < 4; y++) {
@@ -67,7 +67,7 @@ function play(i) {
 }
 //左移
 function run(a) {
-  let not0 = a.filter((i) => i != 0)
+  let not0 = a.filter(i => i != 0)
   for (let i = 0; i < not0.length - 1; i++) {
     if (not0[i] === not0[i + 1]) {
       not0[i] += not0[i]
@@ -75,7 +75,7 @@ function run(a) {
       break
     }
   }
-  let rt = not0.filter((i) => i != 0)
+  let rt = not0.filter(i => i != 0)
   for (let i = rt.length; i < 4; i++) {
     rt.push(0)
   }
@@ -91,6 +91,25 @@ let arr = ref([
 add()
 add()
 let end = false
+document.addEventListener('keydown', event => {
+  switch (event.key) {
+    case 'ArrowUp':
+      play(1)
+      break
+    case 'ArrowDown':
+      play(2)
+      break
+    case 'ArrowLeft':
+      play(3)
+      break
+    case 'ArrowRight':
+      play(4)
+      break
+    default:
+      console.log('请按方向键')
+      break
+  }
+})
 </script>
 
 <template>

@@ -314,7 +314,6 @@ function draw() {
     }
   }
   if (skeleton) {
-    console.log(skeleton)
     for (const i of skeleton) {
       let a = i[0].position
       let b = i[1].position

@@ -324,3 +324,110 @@ function draw() {
   }
 }
 ```
+
+
+## Pose Classify
+
+```js
+let video
+let poseNet
+let pose
+let skeleton
+let nn
+// 0-waiting 1-collecting 2-load/finish 3-training 4-classify
+let state = 1
+const map = {
+  g: 'good',
+  b: 'bad',
+}
+
+function setup() {
+  createCanvas(640, 500)
+  video = createCapture(VIDEO)
+  video.hide()
+  poseNet = ml5.poseNet(video, console.log('poseNet is ready'))
+  poseNet.on('pose', res => {
+    // console.log(res)
+    pose = res[0]?.pose
+    skeleton = res[0]?.skeleton
+  })
+  let options = {
+    inputs: 34,
+    outputs: 2,
+    task: 'classification',
+    debug: true,
+  }
+  nn = ml5.neuralNetwork(options)
+}
+
+function draw() {
+  background(0)
+  image(video, 0, 0)
+  if (pose) {
+    fill('red')
+    for (let i of pose.keypoints) {
+      ellipse(i.position.x, i.position.y, 20)
+    }
+  }
+  if (skeleton) {
+    // console.log(skeleton)
+    for (const i of skeleton) {
+      let a = i[0].position
+      let b = i[1].position
+      strokeWeight(2)
+      stroke(255)
+      line(a.x, a.y, b.x, b.y)
+    }
+  }
+}
+
+// g好坐姿数据 b坏坐姿数据 t训练数据并保存模型
+// l加载数据 s保存数据  m加载模型 c进行分类
+
+function keyPressed() {
+  let inputs = []
+  for (let i of pose.keypoints) {
+    inputs.push(i.position.x)
+    inputs.push(i.position.y)
+  }
+  switch (key) {
+    case 'g':
+    case 'b':
+      if (state == 1) {
+        console.log(key)
+        let target = [key]
+        nn.addData(inputs, target)
+      }
+      break
+    case 't':
+      console.log('training')
+      train()
+      break
+    case 'c':
+      nn.classify(inputs, (err, res) => {
+        console.log(err ?? map[res[0].label])
+      })
+      break
+    case 'm':
+      const model = {
+        model: 'model/model.json',
+        metadata: 'model/model_meta.json',
+        weights: 'model/model.weights.bin',
+      }
+      nn.load(model, console.log('models loaded'))
+      break
+  }
+}
+
+function train() {
+  state = 3
+  nn.normalizeData()
+  nn.train({ epochs: 100 }, () => {
+    // nn.save(`${Date.now()}`)
+    nn.save()
+    console.log('finished training')
+    state = '4'
+  })
+}
+```
+

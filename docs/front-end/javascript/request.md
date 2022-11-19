@@ -253,13 +253,54 @@ let results = await Promise.all(fetchJobs);
 
 ## Axios
 
-- `axios.get(url,{配置})`
-  - params:{},
-  - headers:{},
-- `axios.post(url,{请求体},{配置})`
-  - params:{}, 请求行
-  - headers:{}, 请求头
-- `axios({})`
-  - method url params headers data
-- `.then(res=>{})`
+Axios 基于 promise 网络请求库,在node端基于http模块，在浏览器端基于 XMLHttpRequests 实现,可以实现 拦截\转换\取消 请求的功能
+
+
+- `npm i axios` `const axios = require('axios')`
+- `<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>`
+
+
+**API**
+
+- 用法
+  1. `axios(config).then(res=>{})`
+  2. `axios.get(url[, config])` `axios.post(url[, data[, config]])`
+  3. `const instance = axios.create(config)`
+- 请求配置
+  - url `''`
+  - method `'get'`
+  - baseURL `''`
+  - transformRequest `[(data,headers)=>data]` 请求转换
+  - transformResponse `[data=>data]` 响应转换
+  - headers `{'X-Requested-With': 'XMLHttpRequest'}` 设置请求头
+  - params `{}` 参数
+  - paramsSerializer `(params)=>{}`
+  - data `{}` `'user=brgzz&pwd=123456'`
+  - timeout `0` 请求超时的毫秒数(0永不超时)
+  - withCredentials `false` 跨域请求时是否需要使用凭证
+  - adapter `config=>{}` 自定义处理请求
+  - auth `{}`
+  - responseType `'json'`
+  - responseEncoding `'utf8'`
+  - xsrfCookieName xsrfHeaderName
+  - onUploadProgress onDownloadProgress `progressEvent=>{}` 上传下载进度
+  - maxContentLength maxBodyLength `2000` 最大字节数
+  - validateStatus 有效状态码 `status=>{}`
+  - maxRedirects `5` 最大定向数
+  - proxy `{}` 代理
+- 响应配置
+  - data `{}` 响应内容
+  - status `200` 状态码
+  - statusText `OK` 状态信息
+  - headers `{}` 响应头
+  - config `{}` 配置信息
+  - request `{}` 生成此响应的请求
+- 全局默认值 `axios.defaults.$config=`
+- 拦截器
+  - `axios.interceptors.request.use(config=>config,error=>Promise.reject(error))` 请求拦截器
+  - `axios.interceptors.request.use(response=>response,error=>Promise.reject(error))` 响应拦截器
+  - `axios.interceptors.request.eject(myInterceptor)` 移除拦截器
+- 错误处理 `.catch(err=>{})`
+- 取消请求 `controller.abort()`
+- 请求体编码 默认json 使用`application/x-www-form-urlencoded`格式需要转化
 

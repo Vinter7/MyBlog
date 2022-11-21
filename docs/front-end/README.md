@@ -21,7 +21,7 @@ HTML、CSS、JavaScript、Vue.js 等前端技术
 2. [使用对象](./javascript/object.md)
 3. [原型和类](./javascript/class.md)
 4. [网络请求](./javascript/request.md)
-5. [DOM 操作](./javascript/dom.md)
+5. [文档对象模型](./javascript/dom.md)
 6. [浏览器事件](./javascript/events.md)
 7. [Others](./javascript/others.md)
 

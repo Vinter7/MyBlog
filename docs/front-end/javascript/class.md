@@ -109,7 +109,7 @@ alert( rabbit.eats ); // true
 ```
  
 - 实际上每个函数都有`prototype`属性
-- 默认为`{constrauctor: Func}`
+- 默认为`{constructor: Func}`
 - 属性 constructor 指向函数自身
 - 最好通过添加的方式往`prototype`里面加属性 而不是覆盖
 - new对象其实就类同继承了函数的`prototype`属性对应的`{...}`(也可以是null)

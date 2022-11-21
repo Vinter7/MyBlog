@@ -18,6 +18,7 @@
   - `.head`
   - `.body`
   - `.getElementById(id)`
+  - `.write('<b>Hello from JS</b>')`
 - 导航
   - 节点导航
     - `.childNodes` 所有子节点 集合(类数组可迭代对象)
@@ -77,15 +78,33 @@
     - `div.className='css'` `div.innerHTML='<p>content</p>'`
     - `document.body.append(div)`
   - `document.createTextNode('Here I am')` 文本节点
-- 插入
+  - `let div2 = div.cloneNode(true)` 克隆节点 false克隆不包括子元素
+- 插入节点
+  - `node.append(...nodes)` 在node末尾插入
+  - `.prepend(...nodes)` 在开头插入
+  - `.before(...nodes)` 在之前插入
+  - `.after(...nodes)` 之后
+  - `.replaceWith(..nodes)` 替代
+- 插入html
+  - `elem.insertAdjacentHTML(where,html)`
+  - `beforebegin afterbegin beforeend afterend` 之前 开头 末尾 之后
+  - `insertAdjacentText/Element` 插入文本字符串和元素
+- 删除节点
+  - `node.remove()`
+  - `second.after(first)`所有插入方法都会自动从旧位置删除该节点
 
+## 样式和类
 
-
-
-
-
-
-
-
+- 在js中使用`className`属性对应`class`特性
+- 可以通过对`className`赋值来替换整个整个字符串
+- 可以通过 `classList` 操作单个类
+  - `.classList.add/remove(cssClass)` 增改
+  - `.classList.toggle(cssClass)` 取反
+  - `.classList.contains(cssClass)` 是否含
+  - `classList` 可迭代
+- 对于样式中的多词属性 在style对象中转化为驼峰属性
+- 对于单个属性可以 `.style.prop = "20px"`=>`style="prop: 20px;"`
+- 完全重写 `.style.cssText='css'`
+- 获取级联样式值 `getComputedStyle(元素, [伪元素])` 返回该元素的样式对象
 
 

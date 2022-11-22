@@ -44,7 +44,7 @@
 
 ## 节点属性
 
-![节点层次结构](https://raw.githubusercontent.com/javascript-tutorial/zh.javascript.info/master/2-ui/1-document/05-basic-dom-node-properties/dom-class-hierarchy.svg)
+![节点层次结构图](https://zh.javascript.info/article/basic-dom-node-properties/dom-class-hierarchy.svg)
 
 - `.nodeType` 1元素 3文本
 - `.nodeName/tagName` 节点名，标签名
@@ -105,6 +105,30 @@
 - 对于样式中的多词属性 在style对象中转化为驼峰属性
 - 对于单个属性可以 `.style.prop = "20px"`=>`style="prop: 20px;"`
 - 完全重写 `.style.cssText='css'`
-- 获取级联样式值 `getComputedStyle(元素, [伪元素])` 返回该元素的样式对象
+- 获取计算后样式值 `getComputedStyle(元素, [伪元素])` 返回该元素的样式对象
 
+
+## 几何属性
+
+- 元素
+  - `.offsetParent` 父元素
+  - `.offsetLeft/offsetTop` 相对于父元素左上角边缘的坐标
+  - `.offsetWidth/offsetHeight` 元素外尺寸 包括边框
+  - `.clientLeft/clientTop` 左侧/顶部border的宽度
+  - `.clientWidth/clientHeight` 内容尺寸 内容+padding
+  - `.scrollWidth/scrollHeight` 内容尺寸 包括未滚出内容
+  - `.scrollLeft/scrollTop` 滚了多少 可写
+  - `.getBoundingClientRect()` 元素坐标
+- 文档 窗口
+  - 宽高
+    - `document.documentElement.clientWidth/clientHeight` 文档可见部分宽高
+    - `window.innerWidth/innerHeight` 宽高包括滚条
+  - 获取滚动
+    - `document.documentElement.scrollLeft/scrollTop`
+    - `window.pageXOffset/pageYOffset`
+    - `window.scrollX/Y`
+  - 滚动
+    - `window.scrollTo(x,y)` 绝对
+    - `window.scrollBy(x,y)` 相对
+    - `elem.scrollIntoView([boolean])` 滚到elem在顶部/底部(false)
 

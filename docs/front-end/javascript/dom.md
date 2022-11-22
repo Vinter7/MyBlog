@@ -65,7 +65,7 @@
   - `.attributes` 所有特性集合
   - `.hasAttribute(name)` 是否存在
   - `.getAttribute(name)` 获取这个特性值
-  - `.setAttribute(name, value)` 设置这个特性值
+  - `.setAttribute(name, value)` 设置这个特性值(string)
   - `.removeAttribute(name)` 移除这个特性
 - HTML 特性名字大小写不敏感 值为字符串
 - 非标准特性常用于为JavaScript标记html元素,并设置状态 (建议data-开头)

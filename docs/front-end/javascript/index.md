@@ -7,5 +7,6 @@
 3. [原型和类](./class.md)
 4. [Promise](./promise.md)
 5. [网络请求](./request.md)
-6. [浏览器事件](./events.md)
-7. [Others](./others.md)
+6. [文档对象](./dom.md)
+7. [浏览器事件](./events.md)
+8. [Others](./others.md)

@@ -87,6 +87,7 @@ export default defaultTheme({
           '/front-end/javascript/class',
           '/front-end/javascript/promise',
           '/front-end/javascript/request',
+          '/front-end/javascript/dom',
           '/front-end/javascript/events',
           '/front-end/javascript/others',
         ],

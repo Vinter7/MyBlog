@@ -96,7 +96,7 @@ export default defaultTheme({
         text: 'Vue.js',
         collapsible: true,
         children: [
-          '/front-end/vue/essentials',
+          '/front-end/vue/start',
           '/front-end/vue/components',
           '/front-end/vue/extra',
           '/front-end/vue/router',

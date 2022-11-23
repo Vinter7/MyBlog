@@ -1,6 +1,6 @@
 # Vue.js
 ---
-1. [基础语法](./essentials.md)
+1. [快速上手](./start.md)
 2. [组件玩法](./components.md)
 3. [深入原理](./extra.md)
 4. [Vue 路由](./router.md)

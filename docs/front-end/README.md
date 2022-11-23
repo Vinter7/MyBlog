@@ -29,7 +29,7 @@ HTML、CSS、JavaScript、Vue.js 等前端技术
 
 **Vue.js**
 
-1. [基础语法](./vue/essentials.md)
+1. [快速上手](./vue/start.md)
 2. [组件玩法](./vue/components.md)
 3. [深入原理](./vue/extra.md)
 4. [Vue 路由](./vue/router.md)

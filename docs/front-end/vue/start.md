@@ -298,6 +298,9 @@ export default {
 
 
 ```html
+<input v-model="text">
+<!-- 输入的改动引起绑定值的变动 -->
+
 <input type="text"> <textarea>
   使用value属性和input事件
 <input type="checkbox"> <input type="radio">

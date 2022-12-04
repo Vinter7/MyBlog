@@ -30,7 +30,7 @@
   - state is same as `let state = initial`
   - `setState(value)` to update the value of state
 - Hooks
-  - Functions starting with use are called Hooks
+  - Functions starting with *use* are called Hooks
   - only call Hooks at the top level of components
 - Sharing data between components
   - parent
@@ -40,12 +40,6 @@
   - son
     - `function MyButton({ count, onClick }){}`
     - `return (<button onClick={onClick}>{count}</>)`
-- Thinking in React
-  1. 规划组件层级
-  2. 写出静态版本
-  3. 找动态参数
-  4. 其产生的相应变化
-  5. 增添反向数据流
 
 
 

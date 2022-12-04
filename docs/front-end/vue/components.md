@@ -1,96 +1,173 @@
-# 组件基础
-
-[Vue参考](https://cn.vuejs.org/)
-
-----
-
+# 深入组件
 
 ## 组件注册
 
-- 全局注册
-  - `app.component('compName',component)`
-- 局部注册(仅在当前组件内可用)
-  - import之后直接用 (setup)
-  - 不用语法糖 `components:{compName:component}`
+**全局注册**
+
+```js
+import { createApp } from 'vue'
+import App from './App.vue'
+import MyComponent from './Component.vue'
+const app = createApp(App)
+app.component('ComponentA',MyComponent)
+app.component('ComponentB',{...组件对象})
+```
+
+**局部注册**
+
+:::: code-group
+::: code-group-item 选项式
+```js
+import ComponentA from './ComponentA.vue'
+export default {
+  components: {
+    ComponentA
+  }
+  //组合式
+  //setup(){}
+}
+```
+:::
+::: code-group-item 语法糖
+```vue
+<script setup>
+import ComponentA from './ComponentA.vue'
+</script>
+```
+:::
+::::
+
+## 传参
 
 
-## Props
+:::: code-group
+::: code-group-item 选项式
+```js
+export default {
+  props: ['foo'],
+  created() {
+    console.log(this.foo)
+  }
+  //组合式
+  //setup(props) { console.log(props.foo) }
+  // 规定类型
+  props: {
+    title: String,
+    likes: Number
+    //构造函数
+  }
+}
 
-- `const props = defineProps(['foo'])`访问时为`props.foo`
-- `defineProps({title: String,likes: Number})` 使用对象形式限定类型
-- 不使用语法糖
-  - `props: ['foo']` 
-  - `setup(props){...}`
-- 为了和 HTML attribute 对齐`thePropsMess`->`the-props-mess`
-- `v-bind` 用法
-  - 可以用`v-bind`动态传值
-  - 不加冒号的都是字符串
-  - 加冒号表示js表达式 `:porp="任何类型"`
-  - `v-bind="classA"` 等于将对象中的属性和值都传进去
-- 单向数据流
-  - 不要在子组件中给其赋/改值
-  - 而是抛出一个事件来通知父组件做出改变 `$emit`
-- prop校验略
-- `defineProps({disabled: Boolean})` `<MyComponent disabled />` 写了表true 不写表false
+```
+:::
+::: code-group-item 语法糖
+```vue
+<script setup>
+const props = defineProps(['foo'])
+console.log(props.foo)
+// 规定类型
+defineProps({
+  title: String,
+  likes: Number,
+  propA:[String, Number],
+  propB:{
+    type: String, //类型
+    required: true, // 必要
+    default: 'ok' // 默认
+  }
+  // 详见文档
+})
+</script>
+```
+:::
+::::
 
+## 事件
 
-## 组件事件
+:::: code-group
+::: code-group-item 选项式
+```js
+export default {
+  methods: {
+    submit() {
+      this.$emit('someEvent',7)
+    }
+  }
+}
+//<button @click="$emit('someEvent',7)">click me</button>
 
-- 抛出与监听事件
-  - `$(emit())` 抛出事件
-  - `@` 监听事件
-- 事件参数
-  - `$emit('func', 7)`
-  - `@func="(n)=>log(n)"`
-- 声明抛出的事件
-  - `const emit = defineEmits(['func1', 'func2'])`
-  - `emits: ['inFocus', 'submit']`
-  - `setup(props,ctx){ctx.emit('submit')}`
-  - 校验验证 略
-- `v-model` 用法
-  - 实现与组件输入的双向绑定
-    - `defineProps(['modelValue']);defineEmits(['update:modelValue'])`
-    - `<input :vlue="modelValue" @input="$emit('update:modelValue',$event.target.value)">`
-    - `<CustomInput v-model="orientText" />`
-  - 多个绑定略
-  - 自定义的修饰符略
+//<MyComponent @some-event="n=>n+n" />
+```
+:::
+::: code-group-item 语法糖
+```vue
+<script setup>
+// 因为不能使用this
+const emit = defineEmits(['someEvent'])
+function func(){
+  emit('someEvent',7)
+}
 
+// 关于v-model和组件的组合使用详见文档
+</script>
+```
+:::
+::::
 
 ## 透传
 
-- 当一个组件以单根节点时，透传的 attribute 会自动添加到根元素的 attribute 中
-- 继承如`class style id v-on`
-- 禁用略
-- 多个根元素时可以使用`v-bind="$attrs"`来指定
-- 使用`useAttrs()`来访问一个组件的所有透传
-
+当一个组件以单个元素为根作渲染时，透传的 attribute 会自动被添加到根元素上,包括class、style 和 id. 可以通过`$attrs`或`import { useAttrs } from 'vue'+const attrs = useAttrs()`访问到
 
 ## 插槽
 
-- `<slot>` 插口
-  - 在里面写的作为默认内容
-  - `name=""` 默认命名为`"default"`
-- `<template v-slot:theName>` 插头 v-slot:->#
-- `#[dynamicName]`动态插槽
-- 访问子组件中的值
-  - `<slot m="string" name="abc">`
-    - 可以使用`v-bind="对象"`传全部值
-  - `<MyComonent v-slot="newName">{{newName.m}}</>`
-  - `<template #abc="newObj">{{newObj.a/b/c}} or #abc={a,b,c}`然后直接用
-- 无渲染组件
-  - 子组件只包括逻辑 不做渲染 将数据用`<slot>`传值
-  - `<template><slot :a="a" :b="b" /></>`
-  - 要渲染成什么样子全部交给插头
+```html
+<slot>默认插槽的默认内容</slot>
+<slot name="theName">具名插槽</slot>
 
+<Component>
+  <template #default>
+    加到默认的插槽
+  </template>
+  <template #theName>
+    加到具名插槽
+  </template>
+  <template v-slot:[dynamicSlotName] #[dynamicSlotName]>
+    动态插槽名
+  </template>
+</Component>
+```
 
-## 依赖注入
+**作用域插槽**
 
-- 用于给过深的组件传值
-- `provide('key', value)`
-- `const key = inject('key'[,'默认值'])`
+:::: code-group
+::: code-group-item 默认插槽
+```vue
+<div>
+  <slot text="hello" :count="1"></slot>
+</div>
 
+<MyComponent v-slot="slotProps">
+  {{ slotProps.text }} {{ slotProps.count }}
+</MyComponent>
 
-## 异步组件
+<MyComponent v-slot="{ text, count }">
+  {{ text }} {{ count }}
+</MyComponent>
+```
+:::
+::: code-group-item 具名插槽
+```vue
+<slot name="header" message="hello"></slot>
+<MyComponent>
+  <template #header="headerProps">
+    {{ headerProps }} -> { message: 'hello' }
+  </template>
+</MyComponent>
+```
+:::
+::::
 
-- 从服务器加载相关组件
-- `defineAsyncComponent`
+**无渲染组件**
+
+在script中进行计算 但在template中就丢一个传参用的插槽 父组件拿到参数 然后写出具体视图 非常有意思的思路
+

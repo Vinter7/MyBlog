@@ -171,3 +171,91 @@ function func(){
 
 在script中进行计算 但在template中就丢一个传参用的插槽 父组件拿到参数 然后写出具体视图 非常有意思的思路
 
+
+## 依赖
+
+:::: code-group
+::: code-group-item 选项式 提供
+```js
+export default {
+  // 选项
+  provide: {
+    message: 'hello!'
+  }
+  // 函数形式访问this
+  provide() {
+    return {
+      message: this.message
+      // 提供响应性
+      reactivity：computed(()=>this.message)
+    }
+  }
+}
+// 全局
+app.provide('key','value')
+```
+:::
+::: code-group-item 选项式 注入
+```js
+export default {
+  inject: ['message'],
+  inject: {
+    newName: { // 别名
+      from: 'message', // 原名
+      default: '默认值' // 默认
+    }
+  }
+}
+```
+:::
+::: code-group-item 选项式
+```vue
+<script setup>
+  import { provide，inject } from 'vue'
+  provide('message','hello!')
+  const newName = inject('message','default')
+  // 响应式略
+</script>
+```
+:::
+::::
+
+
+
+## 异步组件
+
+:::: code-group
+::: code-group-item 选项式
+```js
+import { defineAsyncComponent } from 'vue'
+export default {
+  components: {
+    NewName: defineAsyncComponent(() =>
+      import('./components/AdminPageComponent.vue')
+    )
+    AsyncComp: defineAsyncComponent({
+      loader:()=>import('./Comp.vue'), // 加载项
+      loadingComponent: LoadingComponent, // 加载组件
+      delay: 200, // 展示加载组件前的延迟时间
+      errorComponent: ErrorComponent, // 加载失败组件
+      timeout: 3000 //超时
+    })
+  }
+}
+```
+:::
+::: code-group-item 组合式
+```js
+import { defineAsyncComponent } from 'vue'
+const AdminPage = defineAsyncComponent(() =>
+  import('./components/AdminPageComponent.vue')
+)
+const AsyncComp = defineAsyncComponent({...})
+
+// 全局
+app.component('MyComponent', defineAsyncComponent(() =>
+  import('./components/MyComponent.vue')
+))
+```
+:::
+::::

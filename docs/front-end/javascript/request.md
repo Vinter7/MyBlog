@@ -189,51 +189,6 @@ let results = await Promise.all(fetchJobs);
 // 它都将中止所有 fetch
 ```
 
-
-**跨源请求**
-
-- 同源策略: 协议 域名 端口号皆相同
-- JSONP
-  - 只支持get
-  - 服务端应返回js语句的字符串
-  - 在前端定义函数，服务端返回带参数的函数触发
-  - jQuery实现接收JSON
-    - `$. getJSON('url/route?callback=?',function(){})`
-    - `let str = JSON.stringify(json)`
-    - `let cb = request.query.callback`
-    - `response.end('${cb}(${str})')`
-- CORS
-  - 仅设置服务端接口
-  - 设置相应头允许指定站点响应放行
-  - `response.setHeader("Access-Control-Allow-Origin","*")`
-- 安全请求
-  - 安全方法 get post head
-  - 安全的header
-    - Accept Aceept-Language Content-Language
-    - Content-Type
-      - application/x-www-form-urlencoded
-      - multipart/form-data
-      - text/plain
-- CORS
-  - Origin (发)
-  - Access-Control-Allow-Origin (收)
-- 请求头的讲究
-  - 对于跨源请求 js只能访问安全的请求头
-  - 访问其他需要`Access-Control-Expose-Headers`
-  - 比如`Content-Length`
-- 非安全请求
-  - 先发预检请求 `options`
-    - 无body
-    - Access-Control-Request-Method 请求方法
-    - Access-Control-Request-Headers 请求头列表
-  - 如果同意
-    - Access-Control-Allow-Origin 允许请求的源
-    - Access-Control-Allow-Methods 允许的方法
-    - Access-Control-Allow-Headers 允许的请求头
-    - Access-Control-Max-Age 此权限的秒数
-  - 然后发送实际的请求
-
-
 **Fetch API**
 
 - `method` 'GET' 
@@ -304,3 +259,46 @@ Axios 基于 promise 网络请求库,在node端基于http模块，在浏览器�
 - 取消请求 `controller.abort()`
 - 请求体编码 默认json 使用`application/x-www-form-urlencoded`格式需要转化
 
+
+## 跨源请求
+
+- 同源策略: 协议 域名 端口号皆相同
+- JSONP
+  - 只支持get
+  - 服务端应返回js语句的字符串
+  - 在前端定义函数，服务端返回带参数的函数触发
+  - jQuery实现接收JSON
+    - `$. getJSON('url/route?callback=?',function(){})`
+    - `let str = JSON.stringify(json)`
+    - `let cb = request.query.callback`
+    - `response.end('${cb}(${str})')`
+- CORS
+  - 仅设置服务端接口
+  - 设置相应头允许指定站点响应放行
+  - `response.setHeader("Access-Control-Allow-Origin","*")`
+- 安全请求
+  - 安全方法 get post head
+  - 安全的header
+    - Accept Aceept-Language Content-Language
+    - Content-Type
+      - application/x-www-form-urlencoded
+      - multipart/form-data
+      - text/plain
+- CORS
+  - Origin (发)
+  - Access-Control-Allow-Origin (收)
+- 请求头的讲究
+  - 对于跨源请求 js只能访问安全的请求头
+  - 访问其他需要`Access-Control-Expose-Headers`
+  - 比如`Content-Length`
+- 非安全请求
+  - 先发预检请求 `options`
+    - 无body
+    - Access-Control-Request-Method 请求方法
+    - Access-Control-Request-Headers 请求头列表
+  - 如果同意
+    - Access-Control-Allow-Origin 允许请求的源
+    - Access-Control-Allow-Methods 允许的方法
+    - Access-Control-Allow-Headers 允许的请求头
+    - Access-Control-Max-Age 此权限的秒数
+  - 然后发送实际的请求

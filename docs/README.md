@@ -6,7 +6,7 @@ actions:
   - text: Front End
     link: /front-end/
     type: primary
-  - text: My Blog
+  - text: My Demo
     link: /demo/
     type: secondary
 features:

@@ -7,7 +7,7 @@ actions:
     link: /front-end/
     type: primary
   - text: My Blog
-    link: /blog/
+    link: /demo/
     type: secondary
 features:
   - title: Simplicity First

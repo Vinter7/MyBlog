@@ -46,7 +46,7 @@ export default defaultTheme({
     },
   ],
   logo: '/images/windmill.png',
-  repo: 'Vinter7/vinter7.github.io',
+  repo: 'Vinter7/MyBlog',
   sidebar: {
     '/Vuepress/': ['/Vuepress/Configs.md', '/Vuepress/Markdown.md'],
 

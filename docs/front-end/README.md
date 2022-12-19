@@ -24,6 +24,7 @@ HTML、CSS、JavaScript、Vue.js 等前端技术
 5. [文档对象](./javascript/dom.md)
 6. [浏览器事件](./javascript/events.md)
 7. [Others](./javascript/others.md)
+8. [TypeScript](./typescript)
 
 
 
@@ -48,6 +49,7 @@ HTML、CSS、JavaScript、Vue.js 等前端技术
 1. [基本模块](./node/modules.md)
 2. [Express](./node/express.md)
 3. [Koa](./node/koa.md)
+4. [NestJS](./nestjs.md)
 
 
 **ml5.js**

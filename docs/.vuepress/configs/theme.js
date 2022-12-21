@@ -3,10 +3,6 @@ import { defaultTheme } from 'vuepress'
 export default defaultTheme({
   navbar: [
     {
-      text: 'Home',
-      link: '/',
-    },
-    {
       text: 'Front End',
       children: [
         '/front-end/html&css/',
@@ -17,22 +13,15 @@ export default defaultTheme({
       ],
     },
     {
-      text: 'Blog',
+      text: 'Others',
       children: [
-        {
-          text: 'Diary',
-          children: [
-            '/diary/the-past',
-            '/diary/2206',
-            '/diary/2207',
-            '/diary/2208',
-            '/diary/2209',
-          ],
-        },
-        {
-          text: 'Others',
-          children: ['/others/git', '/others/regexp', '/others/vim'],
-        },
+        '/others/python',
+        '/others/django',
+        '/others/algorithm',
+        '/others/tensorflow',
+        '/others/git',
+        '/others/regexp',
+        '/others/vim',
       ],
     },
     {

@@ -4,34 +4,6 @@
 
 ----
 
-## 零碎
-
-### 异常处理
-
-可以通过 `raise Exception('异常类')` 抛出异常
-
-```python
-try:
-    pass
-except:
-    pass
-except IndexError as err:
-    print(err)
-else:
-    print("else")
-finally:
-    print("finally")
-```
-
-### 模块
-
-- 函数 类 文件(模块) 包
-- 导入
-  - `import x.xx.xxx`
-  - `from x.xx import xxx [as rename]`
-- 包形式
-  - 含`__init__.py` 为入口
-
 ## 数据类型
 
 ## 流程控制
@@ -151,7 +123,7 @@ while True:     # 通过一个死循环不断接收用户输入，并发送给�
 s.close()       # 关闭连接
 ```
 :::
-::: UDP
+::: code-group-item UDP
 ```python
 # 服务端
 import socket
@@ -182,7 +154,7 @@ while True:
 sk.close()
 ```
 :::
-::: Socket Server
+::: code-group-item Socket Server
 ```python
 import socketserver
 
@@ -318,7 +290,7 @@ if __name__ == '__main__':
 
     for i in range(20):
         t = pool.get_thread()   # 每个t都是一个线程类
-        obj = t(target=run, args=(i, pool)) # 这里的obj才是正真的线程对象
+        obj = t(target=run, args=(i, pool))
         obj.start()
 
     print("活动的子线程数： ", threading.active_count()-1)
@@ -335,7 +307,6 @@ import os
 import multiprocessing
 
 def foo(i):
-    # 同样的参数传递方法
     print("这里是 ", multiprocessing.current_process().name)
     print('模块名称:', __name__)
     print('父进程 id:', os.getppid())  # 获取父进程id
@@ -343,7 +314,6 @@ def foo(i):
     print('------------------------')
 
 if __name__ == '__main__':
-
     for i in range(5):
         p = multiprocessing.Process(target=foo, args=(i,))
         p.start()
@@ -351,7 +321,7 @@ if __name__ == '__main__':
 
 ## 协程异步
 
-对于IO密集型的任务,我们可以使用协程来处理,协程相比多线程的一大优势就是省去了多线程之间的切换开销，获得了更高的运行效率.为了利用多核CPU性能,可以采用多进程+协程的方法.
+对于IO密集型的任务,我们可以使用协程来处理,协程相比多线程的一大优势就是省去了多线程之间的切换开销,获得了更高的运行效率.为了利用多核CPU性能,可以采用多进程+协程的方法
 
 ```python
 import asyncio
@@ -370,3 +340,33 @@ tasks = [display_date(1, loop), display_date(2, loop)]
 loop.run_until_complete(asyncio.gather(*tasks))  # "阻塞"直到所有的tasks完成
 loop.close()
 ```
+
+## 零碎
+
+### 异常处理
+
+可以通过 `raise Exception('异常类')` 抛出异常
+
+```python
+try:
+    pass
+except:
+    pass
+except IndexError as err:
+    print(err)
+else:
+    print("else")
+finally:
+    print("finally")
+```
+
+### 模块
+
+- 函数 类 文件(模块) 包
+- 导入
+  - `import x.xx.xxx`
+  - `from x.xx import xxx [as rename]`
+- 包形式
+  - 含`__init__.py` 为入口
+
+

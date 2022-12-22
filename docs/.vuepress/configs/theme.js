@@ -38,18 +38,14 @@ export default defaultTheme({
   repo: 'Vinter7/MyBlog',
   sidebar: {
     '/Vuepress/': ['/Vuepress/Configs.md', '/Vuepress/Markdown.md'],
-
-    '/diary/': [
-      '/diary/the-past.md',
-      '/diary/2206.md',
-      '/diary/2207.md',
-      '/diary/2208.md',
-      '/diary/2209.md',
-    ],
     '/others/': [
-      '/others/git.md',
-      '/others/regexp.md',
-      '/others/vim.md',
+      '/others/python',
+      '/others/django',
+      '/others/algorithm',
+      '/others/tensorflow',
+      '/others/git',
+      '/others/regexp',
+      '/others/vim',
     ],
     '/demo/': [
       '/demo/2048',

@@ -15,7 +15,8 @@ export default defaultTheme({
     {
       text: 'Others',
       children: [
-        '/others/python',
+        '/others/python1',
+        '/others/python2',
         '/others/django',
         '/others/algorithm',
         '/others/tensorflow',
@@ -39,7 +40,8 @@ export default defaultTheme({
   sidebar: {
     '/Vuepress/': ['/Vuepress/Configs.md', '/Vuepress/Markdown.md'],
     '/others/': [
-      '/others/python',
+      '/others/python1',
+      '/others/python2',
       '/others/django',
       '/others/algorithm',
       '/others/tensorflow',

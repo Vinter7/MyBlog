@@ -127,24 +127,85 @@ findGirlById(@Param() params ,@Headers() header):any{
 
 `npm install --save @nestjs/typeorm typeorm mysql2`
 
-
+:::: code-group
+::: code-group-item 配置
 ```ts
-// girl.module.ts
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { GirlModule } from './girl/girl.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports:[ TypeOrmModule.forRoot({
-    type:'mysql',           // 数据库类型
-    host:'localhost',       // 数据库的连接地址host
-    port:3306,              // 数据库的端口 3306
-    username:'root',        // 连接账号
-    password:'root123',     // 连接密码
-    database:'test_db',     // 连接的表名
-    retryDelay:500,         // 重试连接数据库间隔
-    retryAttempts:10,       // 允许重连次数
-  })],
+  imports:[ 
+    TypeOrmModule.forRoot({
+      type:'mysql',           // 数据库类型
+      host:'localhost',       // 数据库的连接地址host
+      port:3306,              // 数据库的端口 3306
+      username:'root',        // 连接账号
+      password:'root123',     // 连接密码
+      database:'test_db',     // 连接的表名
+      retryDelay:500,         // 重试连接数据库间隔
+      retryAttempts:10,       // 允许重连次数
+      synchronize:true,       // 是否将实体同步到数据库
+      autoLoadEntities:true,  // 自动加载实体配置
+    }),
+    GirlModule],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
+```
+:::
+::: code-group-item 实体
+```ts
+// girl/entities/girl.entity.ts
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  Generated,
+  } from 'typeorm'
+
+@Entity()
+export class Girl{
+  
+  // id 自增
+  @PrimaryGeneratedColumn()
+  id:number
+
+  @Column({type:"varchar",length:255})
+  name:string
+
+  @Column({type:"int"})
+  age:number
+
+  @Column({type:"varchar"})
+  skill:string
+
+  @CreateDateColumn({type:"timestamp"})
+  entryTime:Date
+
+  @Generated('uuid')
+  uuid:string
+}
+```
+:::
+::: code-group-item 引入
+```ts
+// girl.module.ts
+import { Module } from '@nestjs/common';
+import { GirlController } from './girl/girl.controller';
+import { GirlService } from './girl/girl.service';
+import {TypeOrmModule} from '@nestjs/typeorm'
+import { Girl } from "./entities/girl.entity";
+
+@Module({
+  imports:[TypeOrmModule.forFeature([Girl])],
   controllers: [GirlController],
   providers: [GirlService],
 })
+export class GirlModule {}
 ```
-
+:::
+::::

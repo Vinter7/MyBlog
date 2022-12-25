@@ -98,6 +98,7 @@ export default defaultTheme({
           '/front-end/node/modules',
           '/front-end/node/express',
           '/front-end/node/koa',
+          '/front-end/node/nestjs',
         ],
       },
       {
